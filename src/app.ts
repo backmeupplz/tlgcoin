@@ -8,7 +8,11 @@ import { setupHelp } from './commands/help'
 import { setupI18N } from './helpers/i18n'
 import { setupLanguage } from './commands/language'
 import { attachUser } from './middlewares/attachUser'
+import { setupMine } from './commands/mine'
+import { bypass } from './middlewares/bypass'
 
+// Answer Telegram right away
+bot.use(bypass)
 // Check time
 bot.use(checkTime)
 // Attach user
@@ -18,6 +22,7 @@ setupI18N(bot)
 // Setup commands
 setupHelp(bot)
 setupLanguage(bot)
+setupMine(bot)
 
 // Start bot
 bot.startPolling()

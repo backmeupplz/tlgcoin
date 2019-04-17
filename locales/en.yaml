@@ -11,3 +11,8 @@ help: |
   Address all questions to @borodutch_support.
 language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
+mine: |
+  You have ${balance} TLG.
+
+  Press button below to mine more and update this message!
+mine_button: Mine ${amount} TLG!

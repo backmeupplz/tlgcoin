@@ -4,9 +4,11 @@ import { prop, Typegoose } from 'typegoose'
 export class User extends Typegoose {
   @prop({ required: true, index: true, unique: true })
   id: number
-
   @prop({ required: true, default: 'en' })
   language: string
+
+  @prop({ required: true, default: 0 })
+  balance: number
 }
 
 // Get User model
