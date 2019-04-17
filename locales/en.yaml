@@ -1,0 +1,12 @@
+name: English
+help: |
+  <b>TLGCoin</b> is a simple and fun Telegram-wide game. Compete with friends, transfer TLGCoin to other players for good deeds, fight for the first place in the top players and chats lists! Show them how it's done!
+
+  /help — this message
+  /leaderboard — top chats and players
+  /stats — your personal stats or stats for this chat
+  /mine — start mining TLGCoins!
+
+  Address all questions to @borodutch_support.
+language: Please, select the language.
+language_selected: <b>Bot</b> now speaks English.
