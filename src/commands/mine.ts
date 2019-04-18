@@ -58,7 +58,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
   // Get the unique id of the message
   const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
   // Lock semaphore
-  let updateLock = updateLocks[ctx.dbuser.id]
+  let updateLock = updateLocks[msgId]
   if (!updateLock) {
     updateLock = new Semaphore(1)
     updateLocks[msgId] = updateLock
