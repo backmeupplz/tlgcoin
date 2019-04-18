@@ -66,6 +66,8 @@ async function updateMessage(ctx: ContextMessageUpdate) {
   await updateLock.wait()
   // Check the update requests
   if (messageUpdateRequests[msgId]) {
+    // Release lock
+    updateLock.signal()
     return
   }
   messageUpdateRequests[msgId] = 1
