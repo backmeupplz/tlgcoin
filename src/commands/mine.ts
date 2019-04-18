@@ -4,8 +4,6 @@ import Semaphore from 'semaphore-async-await'
 import { findUser } from '../models'
 import { getName } from '../helpers/name'
 
-const mineLock = new Semaphore(1)
-
 const mineAmount = 1
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
@@ -25,6 +23,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       // TODO: report
     }
     // Lock semaphore
+    const mineLock = new Semaphore(ctx.dbuser.id)
     await mineLock.wait()
     // Try adding coins
     try {
