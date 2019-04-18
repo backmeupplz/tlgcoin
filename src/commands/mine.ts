@@ -37,14 +37,6 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       console.log(`Increasing from ${ctx.dbuser.balance}`)
       ctx.dbuser.balance = ctx.dbuser.balance + mineAmount
       await ctx.dbuser.save()
-    } catch (err) {
-      // TODO: report
-    } finally {
-      // Release semaphore
-      mineLock.signal()
-    }
-    // Try updating balance message
-    try {
       await ctx.editMessageText(
         mineText(ctx),
         mineButtonExtraInline(ctx, mineAmount)
@@ -52,6 +44,9 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       console.log(`Increased to ${ctx.dbuser.balance}`)
     } catch (err) {
       // TODO: report
+    } finally {
+      // Release semaphore
+      mineLock.signal()
     }
   })
 }
