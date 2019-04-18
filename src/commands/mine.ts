@@ -64,12 +64,16 @@ async function updateMessage(ctx: ContextMessageUpdate) {
     messageUpdateRequests[msgId] = 1
     // Update message
     ctx.dbuser = await findUser(ctx.dbuser.id)
-    console.log(`(${ctx.dbuser.id}) Updating message to ${ctx.dbuser.balance}`)
+    console.log(
+      `(${ctx.dbuser.id}) Updating message (${msgId}) to ${ctx.dbuser.balance}`
+    )
     await ctx.editMessageText(
       mineText(ctx),
       mineButtonExtraInline(ctx, mineAmount)
     )
-    console.log(`(${ctx.dbuser.id}) Updated message to ${ctx.dbuser.balance}`)
+    console.log(
+      `(${ctx.dbuser.id}) Updated message (${msgId}) to ${ctx.dbuser.balance}`
+    )
   } catch (err) {
     // TODO: report
     console.error(err.message)
