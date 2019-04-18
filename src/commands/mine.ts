@@ -4,6 +4,12 @@ import Semaphore from 'semaphore-async-await'
 import { findUser } from '../models'
 import { getName } from '../helpers/name'
 
+enum MessageUpdateRequestStatus {
+  Empty = 0,
+  Occupied = 1,
+  Requested = 2,
+}
+
 const mineAmount = 1
 
 const mineLocks = {}
@@ -66,32 +72,49 @@ async function updateMessage(ctx: ContextMessageUpdate) {
   await updateLock.wait()
   // Check the update requests
   if (messageUpdateRequests[msgId]) {
+    messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Requested
     // Release lock
     updateLock.signal()
     return
   }
-  messageUpdateRequests[msgId] = 1
+  messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Occupied
   // Release lock
   updateLock.signal()
-  try {
-    // Update message
-    ctx.dbuser = await findUser(ctx.dbuser.id)
-    console.log(
-      `(${ctx.dbuser.id}) Updating message (${msgId}) to ${ctx.dbuser.balance}`
-    )
-    await ctx.editMessageText(
-      mineText(ctx),
-      mineButtonExtraInline(ctx, mineAmount)
-    )
-    console.log(
-      `(${ctx.dbuser.id}) Updated message (${msgId}) to ${ctx.dbuser.balance}`
-    )
-  } catch (err) {
-    // TODO: report
-    console.error(err.message)
-  } finally {
-    messageUpdateRequests[msgId] = 0
-  }
+  do {
+    try {
+      // If requested, change to occupied
+      if (
+        messageUpdateRequests[msgId] === MessageUpdateRequestStatus.Requested
+      ) {
+        messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Occupied
+      }
+      // Update message
+      ctx.dbuser = await findUser(ctx.dbuser.id)
+      console.log(
+        `(${ctx.dbuser.id}) Updating message (${msgId}) to ${
+          ctx.dbuser.balance
+        }`
+      )
+      await ctx.editMessageText(
+        mineText(ctx),
+        mineButtonExtraInline(ctx, mineAmount)
+      )
+      console.log(
+        `(${ctx.dbuser.id}) Updated message (${msgId}) to ${ctx.dbuser.balance}`
+      )
+    } catch (err) {
+      // TODO: report
+      console.error(err.message)
+    } finally {
+      if (
+        messageUpdateRequests[msgId] !== MessageUpdateRequestStatus.Requested
+      ) {
+        messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Empty
+      }
+    }
+  } while (
+    messageUpdateRequests[msgId] === MessageUpdateRequestStatus.Requested
+  )
 }
 
 function mineButtonExtraInline(ctx, amount) {
