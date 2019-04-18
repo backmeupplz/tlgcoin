@@ -9,10 +9,7 @@ import { setupI18N } from './helpers/i18n'
 import { setupLanguage } from './commands/language'
 import { attachUser } from './middlewares/attachUser'
 import { setupMine } from './commands/mine'
-import { bypass } from './middlewares/bypass'
 
-// Answer Telegram right away
-bot.use(bypass)
 // Check time
 bot.use(checkTime)
 // Attach user
