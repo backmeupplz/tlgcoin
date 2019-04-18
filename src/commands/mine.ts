@@ -95,12 +95,15 @@ async function updateMessage(ctx: ContextMessageUpdate) {
           ctx.dbuser.balance
         }`
       )
-      await ctx.editMessageText(
-        mineText(ctx),
-        mineButtonExtraInline(ctx, mineAmount)
-      )
+      const text = mineText(ctx)
+      const extra = mineButtonExtraInline(ctx, mineAmount)
+      const requestStart = Date.now()
+      await ctx.editMessageText(text, extra)
+      const requestEnd = Date.now()
       console.log(
-        `(${ctx.dbuser.id}) Updated message (${msgId}) to ${ctx.dbuser.balance}`
+        `(${ctx.dbuser.id}) Updated message (${msgId}) to ${
+          ctx.dbuser.balance
+        } in ${(requestEnd - requestStart) / 1000}s`
       )
     } catch (err) {
       // TODO: report
