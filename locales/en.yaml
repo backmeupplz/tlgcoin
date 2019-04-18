@@ -11,8 +11,15 @@ help: |
   Address all questions to @borodutch_support.
 language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
-mine: |
-  You have ${balance} TLG.
+mine_personal: |
+  <b>${name}</b>, you have ${balance} TLG. You are generating ${cps} TLG per second.
+
+  Press button below to mine more and update this message!
+mine_group: |
+  <b>${name}</b> stats
+
+  Balance: ${balance} TLG.
+  Coins per second: ${cps} TLG.
 
   Press button below to mine more and update this message!
 mine_button: Mine ${amount} TLG!
