@@ -22,6 +22,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       await ctx.answerCbQuery()
     } catch (err) {
       // TODO: report
+      console.error(err.message)
     }
     // Lock semaphore
     let mineLock = locks[ctx.dbuser.id]
@@ -34,19 +35,27 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     try {
       // Add coins
       ctx.dbuser = await findUser(ctx.dbuser.id)
-      console.log(`Increasing from ${ctx.dbuser.balance}`)
+      console.log(`(${ctx.dbuser.id}) Increasing from ${ctx.dbuser.balance}`)
       ctx.dbuser.balance = ctx.dbuser.balance + mineAmount
       await ctx.dbuser.save()
+      console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
+    } catch (err) {
+      // TODO: report
+      console.error(err.message)
+    } finally {
+      // Release semaphore
+      mineLock.signal()
+    }
+    // Try updating balance message
+    try {
       await ctx.editMessageText(
         mineText(ctx),
         mineButtonExtraInline(ctx, mineAmount)
       )
-      console.log(`Increased to ${ctx.dbuser.balance}`)
+      console.log(`(${ctx.dbuser.id}) Updated message to ${ctx.dbuser.balance}`)
     } catch (err) {
       // TODO: report
-    } finally {
-      // Release semaphore
-      mineLock.signal()
+      console.error(err.message)
     }
   })
 }
