@@ -54,19 +54,14 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
 }
 
 async function updateMessage(ctx: ContextMessageUpdate) {
+  // Get the unique id of the message
+  const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
   try {
-    // Check if we need to update
-    const timestamp = Math.floor(Date.now() / 1000)
-    // Get the unique id of the message
-    const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
     // Check the update requests
-    if (
-      messageUpdateRequests[msgId] &&
-      messageUpdateRequests[msgId] >= timestamp
-    ) {
+    if (messageUpdateRequests[msgId]) {
       return
     }
-    messageUpdateRequests[msgId] = timestamp
+    messageUpdateRequests[msgId] = 1
     // Update message
     ctx.dbuser = await findUser(ctx.dbuser.id)
     await ctx.editMessageText(
@@ -77,6 +72,8 @@ async function updateMessage(ctx: ContextMessageUpdate) {
   } catch (err) {
     // TODO: report
     console.error(err.message)
+  } finally {
+    messageUpdateRequests[msgId] = 0
   }
 }
 
