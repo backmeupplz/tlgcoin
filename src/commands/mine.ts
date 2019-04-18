@@ -3,6 +3,9 @@ import { Telegraf, ContextMessageUpdate, Markup as m, Extra } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
 import { findUser } from '../models'
 import { getName } from '../helpers/name'
+import commaNumber = require('comma-number')
+
+const balanceFormat = commaNumber.bindWith(' ', ',')
 
 enum MessageUpdateRequestStatus {
   Empty = 0,
@@ -133,7 +136,7 @@ function mineText(ctx) {
   const name = isPrivate ? getName(ctx.from) : ctx.chat.title
   return ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
     name,
-    balance: ctx.dbuser.balance,
+    balance: balanceFormat(ctx.dbuser.balance),
     cps: 0,
   })
 }
