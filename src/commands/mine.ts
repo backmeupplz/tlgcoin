@@ -7,6 +7,7 @@ import { getName } from '../helpers/name'
 const mineAmount = 1
 
 const mineLocks = {}
+const updateLocks = {}
 const messageUpdateRequests = {}
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
@@ -56,12 +57,21 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
 async function updateMessage(ctx: ContextMessageUpdate) {
   // Get the unique id of the message
   const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
+  // Lock semaphore
+  let updateLock = updateLocks[ctx.dbuser.id]
+  if (!updateLock) {
+    updateLock = new Semaphore(1)
+    updateLocks[msgId] = updateLock
+  }
+  await updateLock.wait()
+  // Check the update requests
+  if (messageUpdateRequests[msgId]) {
+    return
+  }
+  messageUpdateRequests[msgId] = 1
+  // Release lock
+  updateLock.signal()
   try {
-    // Check the update requests
-    if (messageUpdateRequests[msgId]) {
-      return
-    }
-    messageUpdateRequests[msgId] = 1
     // Update message
     ctx.dbuser = await findUser(ctx.dbuser.id)
     console.log(
