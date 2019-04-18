@@ -64,6 +64,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
     messageUpdateRequests[msgId] = 1
     // Update message
     ctx.dbuser = await findUser(ctx.dbuser.id)
+    console.log(`(${ctx.dbuser.id}) Updating message to ${ctx.dbuser.balance}`)
     await ctx.editMessageText(
       mineText(ctx),
       mineButtonExtraInline(ctx, mineAmount)
