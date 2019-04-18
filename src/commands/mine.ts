@@ -48,6 +48,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     }
     // Try updating balance message
     try {
+      ctx.dbuser = await findUser(ctx.dbuser.id)
       await ctx.editMessageText(
         mineText(ctx),
         mineButtonExtraInline(ctx, mineAmount)
