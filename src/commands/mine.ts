@@ -5,6 +5,7 @@ import { findUser } from '../models'
 import { getName } from '../helpers/name'
 
 const mineAmount = 1
+const locks = {}
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('mine', async ctx => {
@@ -23,7 +24,11 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       // TODO: report
     }
     // Lock semaphore
-    const mineLock = new Semaphore(ctx.dbuser.id)
+    let mineLock = locks[ctx.dbuser.id]
+    if (!mineLock) {
+      mineLock = new Semaphore(1)
+      locks[ctx.dbuser.id] = mineLock
+    }
     await mineLock.wait()
     // Try adding coins
     try {
