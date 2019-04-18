@@ -5,7 +5,9 @@ import { findUser } from '../models'
 import { getName } from '../helpers/name'
 
 const mineAmount = 1
-const locks = {}
+
+const mineLocks = {}
+const messageUpdateRequests = {}
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('mine', async ctx => {
@@ -25,10 +27,10 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       console.error(err.message)
     }
     // Lock semaphore
-    let mineLock = locks[ctx.dbuser.id]
+    let mineLock = mineLocks[ctx.dbuser.id]
     if (!mineLock) {
       mineLock = new Semaphore(1)
-      locks[ctx.dbuser.id] = mineLock
+      mineLocks[ctx.dbuser.id] = mineLock
     }
     await mineLock.wait()
     // Try adding coins
@@ -47,18 +49,35 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       mineLock.signal()
     }
     // Try updating balance message
-    try {
-      ctx.dbuser = await findUser(ctx.dbuser.id)
-      await ctx.editMessageText(
-        mineText(ctx),
-        mineButtonExtraInline(ctx, mineAmount)
-      )
-      console.log(`(${ctx.dbuser.id}) Updated message to ${ctx.dbuser.balance}`)
-    } catch (err) {
-      // TODO: report
-      console.error(err.message)
-    }
+    await updateMessage(ctx)
   })
+}
+
+async function updateMessage(ctx: ContextMessageUpdate) {
+  try {
+    // Check if we need to update
+    const timestamp = Math.floor(Date.now() / 1000)
+    // Get the unique id of the message
+    const msgId = `${ctx.chat.id}-${ctx.message.message_id}`
+    // Check the update requests
+    if (
+      messageUpdateRequests[msgId] &&
+      messageUpdateRequests[msgId] >= timestamp
+    ) {
+      return
+    }
+    messageUpdateRequests[msgId] = timestamp
+    // Update message
+    ctx.dbuser = await findUser(ctx.dbuser.id)
+    await ctx.editMessageText(
+      mineText(ctx),
+      mineButtonExtraInline(ctx, mineAmount)
+    )
+    console.log(`(${ctx.dbuser.id}) Updated message to ${ctx.dbuser.balance}`)
+  } catch (err) {
+    // TODO: report
+    console.error(err.message)
+  }
 }
 
 function mineButtonExtraInline(ctx, amount) {
