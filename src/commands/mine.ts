@@ -58,7 +58,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
     // Check if we need to update
     const timestamp = Math.floor(Date.now() / 1000)
     // Get the unique id of the message
-    const msgId = `${ctx.chat.id}-${ctx.message.message_id}`
+    const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
     // Check the update requests
     if (
       messageUpdateRequests[msgId] &&
