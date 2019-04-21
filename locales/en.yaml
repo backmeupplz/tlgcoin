@@ -23,3 +23,11 @@ mine_group: |
 
   Press button below to mine more and update this message!
 mine_button: Mine ${amount} TLG!
+leaderboard: |
+  🏆 Top players 🏆
+
+  ${players}
+
+  🔥 Top chats 🔥
+
+  ${chats}

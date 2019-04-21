@@ -1,9 +1,9 @@
 // Dependencies
-import { findUser } from '../models'
+import { findOrCreateUser } from '../models'
 import { ContextMessageUpdate } from 'telegraf'
 
 export async function attachUser(ctx: ContextMessageUpdate, next) {
-  const dbuser = await findUser(ctx.chat.id)
+  const dbuser = await findOrCreateUser(ctx)
   ctx.dbuser = dbuser
   next()
 }

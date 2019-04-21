@@ -1,3 +1,4 @@
+import { UserModel } from './models/User'
 // Config dotenv
 import * as dotenv from 'dotenv'
 dotenv.config({ path: `${__dirname}/../.env` })
@@ -9,17 +10,21 @@ import { setupI18N } from './helpers/i18n'
 import { setupLanguage } from './commands/language'
 import { attachUser } from './middlewares/attachUser'
 import { setupMine } from './commands/mine'
+import { setupLeaderboard } from './commands/leaderboard'
+import { updateUser } from './middlewares/updateUser'
 
 // Check time
 bot.use(checkTime)
-// Attach user
+// Attach and update user
 bot.use(attachUser)
+bot.use(updateUser)
 // Setup localization
 setupI18N(bot)
 // Setup commands
 setupHelp(bot)
 setupLanguage(bot)
 setupMine(bot)
+setupLeaderboard(bot)
 
 // Start bot
 bot.startPolling()

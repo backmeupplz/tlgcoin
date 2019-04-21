@@ -1,11 +1,10 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate, Markup as m, Extra } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
-import { findUser } from '../models'
+import { UserModel } from '../models'
 import { getName } from '../helpers/name'
-import commaNumber = require('comma-number')
-
-const balanceFormat = commaNumber.bindWith(' ', ',')
+import { format } from '../helpers/format'
+import { report } from '../helpers/report'
 
 enum MessageUpdateRequestStatus {
   Empty = 0,
@@ -33,8 +32,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
       // Answer right away
       await ctx.answerCbQuery()
     } catch (err) {
-      // TODO: report
-      console.error(err.message)
+      await report(ctx.telegram, err)
     }
     // Lock semaphore
     let mineLock = mineLocks[ctx.dbuser.id]
@@ -46,14 +44,13 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     // Try adding coins
     try {
       // Add coins
-      ctx.dbuser = await findUser(ctx.dbuser.id)
+      ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
       console.log(`(${ctx.dbuser.id}) Increasing from ${ctx.dbuser.balance}`)
       ctx.dbuser.balance = ctx.dbuser.balance + mineAmount
       await ctx.dbuser.save()
       console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
     } catch (err) {
-      // TODO: report
-      console.error(err.message)
+      await report(ctx.telegram, err)
     } finally {
       // Release semaphore
       mineLock.signal()
@@ -92,7 +89,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
         messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Occupied
       }
       // Update message
-      ctx.dbuser = await findUser(ctx.dbuser.id)
+      ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
       console.log(
         `(${ctx.dbuser.id}) Updating message (${msgId}) to ${
           ctx.dbuser.balance
@@ -109,8 +106,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
         } in ${(requestEnd - requestStart) / 1000}s`
       )
     } catch (err) {
-      // TODO: report
-      console.error(err.message)
+      await report(ctx.telegram, err)
     } finally {
       if (
         messageUpdateRequests[msgId] !== MessageUpdateRequestStatus.Requested
@@ -136,7 +132,7 @@ function mineText(ctx) {
   const name = isPrivate ? getName(ctx.from) : ctx.chat.title
   return ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
     name,
-    balance: balanceFormat(ctx.dbuser.balance),
+    balance: format(ctx.dbuser.balance),
     cps: 0,
   })
 }
