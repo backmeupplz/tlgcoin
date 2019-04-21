@@ -7,6 +7,9 @@ export async function updateUser(ctx: ContextMessageUpdate, next) {
   try {
     user.type = ctx.chat.type
     user.chat = ctx.chat
+    user.username = ctx.chat.username
+      ? ctx.chat.username.toLowerCase()
+      : undefined
     if (user.type !== 'private') {
       if (!user.chat.username && !user.chat.invite_link) {
         try {

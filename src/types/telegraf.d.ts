@@ -8,6 +8,9 @@ declare module 'telegraf' {
   export class ContextMessageUpdate {
     dbuser: InstanceType<User>
     i18n: I18N
+    options: {
+      username?: string
+    }
   }
 
   export interface Composer<TContext extends ContextMessageUpdate> {

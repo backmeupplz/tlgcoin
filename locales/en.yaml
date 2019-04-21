@@ -5,9 +5,10 @@ help: |
   /help — this message
   /language — change language
   /leaderboard — top chats and players
+  /transfer — share your TLGCoins with other players, chats and channels
   /mine — start mining TLGCoins!
 
-  Address all questions to @borodutch_support.
+  Address all questions to @borodutch_support. Telegram ID for this chat is <b>${id}</b>.
 language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
 mine_personal: |
@@ -38,3 +39,8 @@ leaderboard: |
 
   ${channels}
 updated: <i>Updated ${time}</i>
+signature: — @${username}
+transfer_format_error: Please, specify who should receive TLGCoins and how many TLGCoins to send in the form of either <code>/transfer @borodutch 100</code> or <code>/transfer 76104711 100</code>; where first comes the command, then the recipient (handle or ID) and then the amount. You can learn chat's Telegram ID in /help.
+transfer_recipient_error: Chat <b>${recipient}</b> could not be found. Try sending them link to @tlgcoin_bot and ask them to start the chat with the bot.
+transfer_balance_error: Sorry, you don't have enough TLGCoin to complete the transfer of <b>${amount}</b> TLGCoins. Your balance is <b>${balance}</b> TLGCoins.
+transfer_success: Successfully transfered <b>${amount}</b> TLGCoins from <b>${sender}</b> to <b>${recipient}</b>.

@@ -5,9 +5,10 @@ help: |
   /help — это сообщение
   /language — сменить язык
   /leaderboard — топ чатов и игроков
+  /transfer — поделитесь ТЛГКоинами с другими игроками, чатами или каналами
   /mine — начать майнить ТЛГКоины!
 
-  По всем вопросам на @borodutch_support.
+  По всем вопросам на @borodutch_support. ID Телеграма этого чата — <b>${id}</b>.
 language: Пожалуйста, выберите язык.
 language_selected: <b>Бот</b> теперь говорит по-русски.
 mine_personal: |
@@ -38,3 +39,8 @@ leaderboard: |
 
   ${channels}
 updated: <i>Обновлено ${time}</i>
+signature: — @${username}
+transfer_format_error: Пожалуйста, укажите, кто должен получить ТЛГКоины и как много ТЛГКоинов перевести в формате либо <code>/transfer @borodutch 100</code>, либо <code>/transfer 76104711 100</code>; где сначала идет команда, потом получатель (хендл или ID) и потом сумма перевода. Вы можете узнать свой ID Телеграма в /help.
+transfer_recipient_error: Чат <b>${recipient}</b> не найден. Попробуйте послать им ссылку на @tlgcoin_bot и попросить начать чат с ботом.
+transfer_balance_error: Простите, но у вас недостаточно ТЛГКоинов для перевода <b>${amount}</b> ТЛГКоинов. Ваш баланс <b>${balance}</b> ТЛГКоинов.
+transfer_success: Успешно переведено <b>${amount}</b> ТЛГКоинов от <b>${sender}</b> к <b>${recipient}</b>.

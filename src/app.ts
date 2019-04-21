@@ -1,4 +1,3 @@
-import { UserModel } from './models/User'
 // Config dotenv
 import * as dotenv from 'dotenv'
 dotenv.config({ path: `${__dirname}/../.env` })
@@ -12,6 +11,7 @@ import { attachUser } from './middlewares/attachUser'
 import { setupMine } from './commands/mine'
 import { setupLeaderboard } from './commands/leaderboard'
 import { updateUser } from './middlewares/updateUser'
+import { setupTransfer } from './commands/transfer'
 
 // Check time
 bot.use(checkTime)
@@ -25,6 +25,7 @@ setupHelp(bot)
 setupLanguage(bot)
 setupMine(bot)
 setupLeaderboard(bot)
+setupTransfer(bot)
 
 // Start bot
 bot.startPolling()

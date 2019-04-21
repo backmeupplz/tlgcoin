@@ -1,7 +1,7 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
-import { UserModel, User } from '../models'
+import { UserModel } from '../models'
 import { getName } from '../helpers/name'
 import { format } from '../helpers/format'
 import { report } from '../helpers/report'
@@ -137,10 +137,18 @@ async function mineText(ctx: ContextMessageUpdate) {
   )
   const isPrivate = ctx.chat.type === 'private'
   const name = getName(ctx.dbuser.chat)
-  return `${ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
+
+  let text = `${ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
     name,
     balance: format(ctx.dbuser.balance),
     cps: 0,
     position,
-  })}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
+  })}`
+  text = `${text}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
+  if (ctx.chat.type === 'channel') {
+    text = `${text} ${ctx.i18n.t('signature', {
+      username: ctx.options.username,
+    })}`
+  }
+  return text
 }
