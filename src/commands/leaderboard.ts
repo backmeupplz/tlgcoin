@@ -10,7 +10,12 @@ export function setupLeaderboard(bot: Telegraf<ContextMessageUpdate>) {
     const topUsers = await UserModel.find({ type: 'private' })
       .sort({ balance: -1 })
       .limit(10)
-    const topChats = await UserModel.find({ type: { $ne: 'private' } })
+    const topChannels = await UserModel.find({ type: 'channel' })
+      .sort({ balance: -1 })
+      .limit(10)
+    const topChats = await UserModel.find({
+      type: ['group', 'supergroup'],
+    })
       .sort({ balance: -1 })
       .limit(10)
     await ctx.replyWithHTML(
@@ -25,6 +30,13 @@ export function setupLeaderboard(bot: Telegraf<ContextMessageUpdate>) {
           ''
         ),
         chats: topChats.reduce(
+          (prev, cur, i) =>
+            `${prev ? `${prev}\n` : prev}${i + 1}. ${getNameWithLink(
+              cur.chat
+            )} (${format(cur.balance)})`,
+          ''
+        ),
+        channels: topChannels.reduce(
           (prev, cur, i) =>
             `${prev ? `${prev}\n` : prev}${i + 1}. ${getNameWithLink(
               cur.chat

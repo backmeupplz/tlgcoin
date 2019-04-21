@@ -5,21 +5,23 @@ help: |
   /help — this message
   /language — change language
   /leaderboard — top chats and players
-  /stats — your personal stats or stats for this chat
   /mine — start mining TLGCoins!
 
   Address all questions to @borodutch_support.
 language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
 mine_personal: |
-  <b>${name}</b>, you have ${balance} TLG. You are generating ${cps} TLG per second.
+  • <b>${name}</b>, you have ${balance} TLG
+  • You are generating ${cps} TLG per second
+  • Your position in the top rating is ${position}
 
   Press button below to mine more and update this message!
 mine_group: |
   <b>${name}</b> stats
 
-  Balance: ${balance} TLG.
-  Coins per second: ${cps} TLG.
+  • Balance: ${balance} TLG
+  • Coins per second: ${cps} TLG
+  • Position in the top rating: ${position}
 
   Press button below to mine more and update this message!
 mine_button: Mine ${amount} TLG!
@@ -31,3 +33,8 @@ leaderboard: |
   🔥 Top chats 🔥
 
   ${chats}
+
+  📣 Top channels 📣
+
+  ${channels}
+updated: <i>Updated ${time}</i>

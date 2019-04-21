@@ -1,10 +1,11 @@
 // Dependencies
-import { Telegraf, ContextMessageUpdate, Markup as m, Extra } from 'telegraf'
+import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
-import { UserModel } from '../models'
+import { UserModel, User } from '../models'
 import { getName } from '../helpers/name'
 import { format } from '../helpers/format'
 import { report } from '../helpers/report'
+import { getUTCTime } from '../helpers/date'
 
 enum MessageUpdateRequestStatus {
   Empty = 0,
@@ -22,7 +23,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('mine', async ctx => {
     // Send inline button
     await ctx.replyWithHTML(
-      mineText(ctx),
+      await mineText(ctx),
       mineButtonExtraInline(ctx, mineAmount)
     )
   })
@@ -95,7 +96,7 @@ async function updateMessage(ctx: ContextMessageUpdate) {
           ctx.dbuser.balance
         }`
       )
-      const text = mineText(ctx)
+      const text = await mineText(ctx)
       const extra = mineButtonExtraInline(ctx, mineAmount)
       const requestStart = Date.now()
       await ctx.editMessageText(text, extra)
@@ -127,12 +128,19 @@ function mineButtonExtraInline(ctx, amount) {
   )
 }
 
-function mineText(ctx) {
+async function mineText(ctx: ContextMessageUpdate) {
+  const position = format(
+    (await UserModel.find({
+      type: ctx.dbuser.type,
+      balance: { $gt: ctx.dbuser.balance },
+    }).countDocuments()) + 1
+  )
   const isPrivate = ctx.chat.type === 'private'
-  const name = isPrivate ? getName(ctx.from) : ctx.chat.title
-  return ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
+  const name = getName(ctx.dbuser.chat)
+  return `${ctx.i18n.t(isPrivate ? 'mine_personal' : 'mine_group', {
     name,
     balance: format(ctx.dbuser.balance),
     cps: 0,
-  })
+    position,
+  })}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
 }
