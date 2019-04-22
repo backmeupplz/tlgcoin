@@ -97,4 +97,4 @@ duel_finished_message_tie: |
 
   Thank you for the fair duel!
 lock_on: Bot will only respond to admin commands.
-lock_on: Bot will respond commands sent by anyone.
+lock_off: Bot will respond commands sent by anyone.
