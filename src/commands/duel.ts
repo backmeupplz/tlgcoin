@@ -24,7 +24,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('duel', checkLock, async ctx => {
     await duelLock.wait()
     try {
-      const components = ctx.message.text.split(' ')
+      const components = (ctx.message || ctx.channelPost).text.split(' ')
       if (components.length < 2) {
         return ctx.replyWithHTML(ctx.i18n.t('duel_format_error'))
       }

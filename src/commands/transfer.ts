@@ -8,11 +8,14 @@ import { checkLock } from '../middlewares/checkLock'
 
 export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('transfer', checkLock, async ctx => {
-    if (!ctx.message || !ctx.message.text) {
+    if (
+      !(ctx.message || ctx.channelPost) ||
+      !(ctx.message || ctx.channelPost).text
+    ) {
       return
     }
     try {
-      const components = ctx.message.text.split(' ')
+      const components = (ctx.message || ctx.channelPost).text.split(' ')
       if (components.length < 3) {
         return ctx.replyWithHTML(ctx.i18n.t('transfer_format_error'))
       }

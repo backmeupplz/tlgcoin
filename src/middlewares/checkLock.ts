@@ -23,7 +23,10 @@ export async function checkLock(ctx: ContextMessageUpdate, next: () => any) {
   } else {
     try {
       // Delete if needed
-      await ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id)
+      await ctx.telegram.deleteMessage(
+        ctx.chat.id,
+        (ctx.message || ctx.channelPost).message_id
+      )
     } catch (err) {
       await report(ctx.telegram, err)
     }
