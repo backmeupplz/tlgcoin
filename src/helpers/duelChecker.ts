@@ -15,13 +15,12 @@ const dirtyI18N = require('telegraf-i18n')
 let isChecking = false
 
 let bot: Telegraf<ContextMessageUpdate>
-let checker
 
 export async function startCheckingDuels(
   newBot: Telegraf<ContextMessageUpdate>
 ) {
   bot = newBot
-  checker = setInterval(async () => {
+  setInterval(async () => {
     if (isChecking) {
       return
     }
