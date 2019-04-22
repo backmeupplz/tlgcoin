@@ -9,7 +9,10 @@ export async function report(telegram: Telegram, err: Error) {
         return
       }
     }
-    const text = `Error:\n<code>${err.message || JSON.stringify(err)}</code>`
+    const text = `Error:\n<code>${err.message ||
+      JSON.stringify(err)}</code>\n\n<code>${err.stack
+      .replace('<', '\\<')
+      .replace('>', '\\>')}</code>`
     await telegram.sendMessage(process.env.ADMIN, text, {
       parse_mode: 'HTML',
     })

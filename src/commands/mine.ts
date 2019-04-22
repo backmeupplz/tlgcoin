@@ -7,7 +7,7 @@ import { format } from '../helpers/format'
 import { report } from '../helpers/report'
 import { getUTCTime } from '../helpers/date'
 
-enum MessageUpdateRequestStatus {
+export enum MessageUpdateRequestStatus {
   Empty = 0,
   Occupied = 1,
   Requested = 2,
@@ -46,10 +46,9 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     try {
       // Add coins
       ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
-      console.log(`(${ctx.dbuser.id}) Increasing from ${ctx.dbuser.balance}`)
       ctx.dbuser.balance = ctx.dbuser.balance + mineAmount
       await ctx.dbuser.save()
-      console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
+      // console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
     } catch (err) {
       await report(ctx.telegram, err)
     } finally {
@@ -91,21 +90,9 @@ async function updateMessage(ctx: ContextMessageUpdate) {
       }
       // Update message
       ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
-      console.log(
-        `(${ctx.dbuser.id}) Updating message (${msgId}) to ${
-          ctx.dbuser.balance
-        }`
-      )
       const text = await mineText(ctx)
       const extra = mineButtonExtraInline(ctx, mineAmount)
-      const requestStart = Date.now()
       await ctx.editMessageText(text, extra)
-      const requestEnd = Date.now()
-      console.log(
-        `(${ctx.dbuser.id}) Updated message (${msgId}) to ${
-          ctx.dbuser.balance
-        } in ${(requestEnd - requestStart) / 1000}s`
-      )
     } catch (err) {
       await report(ctx.telegram, err)
     } finally {
@@ -131,6 +118,7 @@ function mineButtonExtraInline(ctx, amount) {
 async function mineText(ctx: ContextMessageUpdate) {
   const position = format(
     (await UserModel.find({
+      id: { $ne: ctx.chat.id },
       type: ctx.dbuser.type,
       balance: { $gt: ctx.dbuser.balance },
     }).countDocuments()) + 1

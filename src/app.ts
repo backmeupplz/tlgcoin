@@ -12,6 +12,8 @@ import { setupMine } from './commands/mine'
 import { setupLeaderboard } from './commands/leaderboard'
 import { updateUser } from './middlewares/updateUser'
 import { setupTransfer } from './commands/transfer'
+import { setupDuel } from './commands/duel'
+import { setupDuelMode } from './commands/duelMode'
 
 // Check time
 bot.use(checkTime)
@@ -26,6 +28,8 @@ setupLanguage(bot)
 setupMine(bot)
 setupLeaderboard(bot)
 setupTransfer(bot)
+setupDuel(bot)
+setupDuelMode(bot)
 
 // Start bot
 bot.startPolling()

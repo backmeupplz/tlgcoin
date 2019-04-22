@@ -6,6 +6,8 @@ help: |
   /language — change language
   /leaderboard — top chats and players
   /transfer — share your TLGCoins with other players, chats and channels
+  /duel — duel for TLGCoins
+  /duelMode — toggle duel mode on and off
   /mine — start mining TLGCoins!
 
   Address all questions to @borodutch_support. Telegram ID for this chat is <b>${id}</b>.
@@ -13,7 +15,6 @@ language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
 mine_personal: |
   • <b>${name}</b>, you have ${balance} TLG
-  • You are generating ${cps} TLG per second
   • Your position in the top rating is ${position}
 
   Press button below to mine more and update this message!
@@ -21,7 +22,6 @@ mine_group: |
   <b>${name}</b> stats
 
   • Balance: ${balance} TLG
-  • Coins per second: ${cps} TLG
   • Position in the top rating: ${position}
 
   Press button below to mine more and update this message!
@@ -41,6 +41,44 @@ leaderboard: |
 updated: <i>Updated ${time}</i>
 signature: — @${username}
 transfer_format_error: Please, specify who should receive TLGCoins and how many TLGCoins to send in the form of either <code>/transfer @borodutch 100</code> or <code>/transfer 76104711 100</code>; where first comes the command, then the recipient (handle or ID) and then the amount. You can learn chat's Telegram ID in /help.
-transfer_recipient_error: Chat <b>${recipient}</b> could not be found. Try sending them link to @tlgcoin_bot and ask them to start the chat with the bot.
-transfer_balance_error: Sorry, you don't have enough TLGCoin to complete the transfer of <b>${amount}</b> TLGCoins. Your balance is <b>${balance}</b> TLGCoins.
+chat_not_found_error: Chat <b>${recipient}</b> could not be found. Try sending them link to @tlgcoin_bot and ask them to start the chat with the bot.
+transfer_balance_error: Sorry, you don't have enough TLGCoins to complete the transfer of <b>${amount}</b> TLGCoins. Your balance is <b>${balance}</b> TLGCoins.
 transfer_success: Successfully transfered <b>${amount}</b> TLGCoins from <b>${sender}</b> to <b>${recipient}</b>.
+refresh: Refresh
+duel_format_error: Please, specify the chat that you want to duel in the form of either <code>/duel @borodutch</code> or <code>/duel 76104711</code>; where first comes the command, then the chat (handle or ID) that you want to duel. You can learn chat's Telegram ID in /help.
+duel_balance_error: Sorry, you don't have enough TLGCoins to duel. You should have at least 1000 TLGCoins.
+duel_self_error: You cannot duel yourselves.
+only_admins_error: Only admins can do this.
+active_duel_error: <b>${attacker}</b> is already dueling <b>${defender}</b>.
+duel_request_early_error: You can only request a duel once an hour.
+duels_on: Duel mode is now active in this chat — you can be attacked!
+duels_off: Duel mode is now disabled in this chat — you cannot be attacked.
+duel_channel_error: You cannot request duels from channels.
+duel_confirm: |
+  Are you sure that <b>${attacker}</b> (${attackerBalance} TLGCoins) wants to request a duel from <b>${defender}</b> (${defenderBalance} TLGCoins)?
+
+  The rules are simple: whoever gets the most clicks in 10 minutes will get 20% of the other's TLGCoins.
+attack: Attack!
+cancel: Cancel
+duel_off_error: <b>${defender}</b> chat doesn't have duel mode on.
+duel_cancelled: Duel cancelled.
+duel_requested: Duel between <b>${attacker}</b> and <b>${defender}</b> has been requested. Awaiting answer from <b>${defender}</b>.
+duel_request: |
+  <b>${attacker}</b> (${attackerBalance} TLGCoins) has challenged <b>${defender}</b> (${defenderBalance} TLGCoins) to a duel! Would you like to fight back and try winning their precious TLGCoins?
+
+  The rules are simple: whoever gets the most clicks in 10 minutes will get 20% of the other's TLGCoins.
+fight: Fight!
+flee: Flee
+defender_fled: Unfortunately, <b>${defender}</b> fled, so no duel happened this time.
+flee_success: Fled successfully.
+active_duel: |
+  Duel between <b>${attacker}</b> and <b>${defender}</b>
+
+  ${duelers}
+
+  Press the button below — who will have the most clicks by the end of the duel will take 20% of the looser's TLGCoins!
+
+  Duel will end: ${duelEndTime}
+duel_action: Do a click!
+duel_not_found: Duel not found.
+fight_message: Let the duel begin!

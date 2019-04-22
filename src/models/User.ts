@@ -18,6 +18,9 @@ export class User extends Typegoose {
   chat: Telegram.Chat
   @prop()
   username?: string
+
+  @prop({ required: true, default: true })
+  duelsOn: boolean
 }
 
 // Get User model

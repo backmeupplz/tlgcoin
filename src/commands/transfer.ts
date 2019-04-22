@@ -10,6 +10,9 @@ const transferLock = new Semaphore(1)
 
 export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('transfer', async ctx => {
+    if (!ctx.message || !ctx.message.text) {
+      return
+    }
     await transferLock.wait()
     try {
       const components = ctx.message.text.split(' ')
@@ -19,6 +22,13 @@ export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
       const recipientHandleOrID = components[1]
       // Get sender
       const sender = await UserModel.findOne({ id: ctx.from.id })
+      if (!sender) {
+        return ctx.replyWithHTML(
+          ctx.i18n.t('chat_not_found_error', {
+            recipient: getName(ctx.from),
+          })
+        )
+      }
       // Get recipient
       let recipient: InstanceType<User>
       if (recipientHandleOrID.indexOf('@') > -1) {
@@ -32,14 +42,14 @@ export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
       }
       if (!recipient) {
         return ctx.replyWithHTML(
-          ctx.i18n.t('transfer_recipient_error', {
+          ctx.i18n.t('chat_not_found_error', {
             recipient: recipientHandleOrID,
           })
         )
       }
       const amount = parseInt(components[2], 10)
       // Check if amount is non-positive
-      if (amount <= 0) {
+      if (!amount || amount <= 0 || isNaN(amount)) {
         return
       }
       // Check balance

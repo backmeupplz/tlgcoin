@@ -1,12 +1,12 @@
-import { Chat } from 'telegram-typings'
+import { Chat, User } from 'telegram-typings'
 
-export function getName(chat: Chat) {
-  if (chat.type === 'private') {
+export function getName(chat: Chat | User) {
+  if (!('type' in chat) || chat.type === 'private') {
     return chat.username
       ? chat.username
       : `${chat.first_name}${chat.last_name ? ` ${chat.last_name}` : ''}`
   } else {
-    return chat.title
+    return (chat as Chat).title
   }
 }
 
