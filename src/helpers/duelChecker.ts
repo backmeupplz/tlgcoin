@@ -86,9 +86,9 @@ async function checkDuels() {
               defender: getName(duel.defender.chat),
               duelers,
             })}\n${i18n.t('updated', { time: getUTCTime() })}`
-            if (ctx.chat.type === 'channel') {
-              text = `${text} ${ctx.i18n.t('signature', {
-                username: ctx.options.username,
+            if (duel.attacker.chat.type === 'channel') {
+              text = `${text} ${i18n.t('signature', {
+                username: bot.options.username,
               })}`
             }
             await bot.telegram.editMessageText(
@@ -107,9 +107,9 @@ async function checkDuels() {
               defender: getName(duel.defender.chat),
               duelers,
             })}\n${i18n.t('updated', { time: getUTCTime() })}`
-            if (ctx.chat.type === 'channel') {
-              text = `${text} ${ctx.i18n.t('signature', {
-                username: ctx.options.username,
+            if (duel.defender.chat.type === 'channel') {
+              text = `${text} ${i18n.t('signature', {
+                username: bot.options.username,
               })}`
             }
             await bot.telegram.editMessageText(
@@ -136,9 +136,9 @@ async function checkDuels() {
                 : getName(duel.attacker.chat),
               amount: format(amountWon),
             })}\n${i18n.t('updated', { time: getUTCTime() })}`
-            if (ctx.chat.type === 'channel') {
-              text = `${text} ${ctx.i18n.t('signature', {
-                username: ctx.options.username,
+            if (duel.attacker.chat.type === 'channel') {
+              text = `${text} ${i18n.t('signature', {
+                username: bot.options.username,
               })}`
             }
             await bot.telegram.editMessageText(
@@ -164,9 +164,9 @@ async function checkDuels() {
                 : getName(duel.attacker.chat),
               amount: format(amountWon),
             })}\n${i18n.t('updated', { time: getUTCTime() })}`
-            if (ctx.chat.type === 'channel') {
-              text = `${text} ${ctx.i18n.t('signature', {
-                username: ctx.options.username,
+            if (duel.defender.chat.type === 'channel') {
+              text = `${text} ${i18n.t('signature', {
+                username: bot.options.username,
               })}`
             }
             await bot.telegram.editMessageText(
