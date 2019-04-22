@@ -16,9 +16,12 @@ import { setupDuel } from './commands/duel'
 import { setupDuelMode } from './commands/duelMode'
 import { startCheckingDuels } from './helpers/duelChecker'
 import { setupLock } from './commands/lock'
+import { convertChannelPost } from './middlewares/convertChannelPost'
 
 // Check time
 bot.use(checkTime)
+// Support channel pots
+bot.use(convertChannelPost)
 // Attach and update user
 bot.use(attachUser)
 bot.use(updateUser)
