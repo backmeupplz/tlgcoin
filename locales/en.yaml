@@ -8,6 +8,7 @@ help: |
   /transfer — share your TLGCoins with other players, chats and channels
   /duel — duel for TLGCoins
   /duelMode — toggle duel mode on and off
+  /lock — answer only to admins or to anyone
   /mine — start mining TLGCoins!
 
   Address all questions to @borodutch_support. Telegram ID for this chat is <b>${id}</b>.
@@ -95,3 +96,5 @@ duel_finished_message_tie: |
   ${duelers}
 
   Thank you for the fair duel!
+lock_on: Bot will only respond to admin commands.
+lock_on: Bot will respond commands sent by anyone.

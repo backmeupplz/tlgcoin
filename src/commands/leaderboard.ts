@@ -1,4 +1,5 @@
 // Dependencies
+import { checkLock } from '../middlewares/checkLock'
 import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
 import { UserModel } from '../models'
 import { getName, getNameWithLink } from '../helpers/name'
@@ -7,7 +8,7 @@ import { report } from '../helpers/report'
 import { getUTCTime } from '../helpers/date'
 
 export function setupLeaderboard(bot: Telegraf<ContextMessageUpdate>) {
-  bot.command('leaderboard', async ctx => {
+  bot.command('leaderboard', checkLock, async ctx => {
     await ctx.replyWithHTML(
       await leaderboardText(ctx),
       refreshInlineButton(ctx)

@@ -1,4 +1,5 @@
 // Dependencies
+import { checkLock } from '../middlewares/checkLock'
 import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
 import { UserModel } from '../models'
@@ -20,7 +21,7 @@ const updateLocks = {}
 const messageUpdateRequests = {}
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
-  bot.command('mine', async ctx => {
+  bot.command('mine', checkLock, async ctx => {
     // Send inline button
     await ctx.replyWithHTML(
       await mineText(ctx),

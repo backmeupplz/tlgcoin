@@ -4,9 +4,10 @@ import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { report } from '../helpers/report'
 import { InstanceType } from 'typegoose'
 import { getName } from '../helpers/name'
+import { checkLock } from '../middlewares/checkLock'
 
 export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
-  bot.command('transfer', async ctx => {
+  bot.command('transfer', checkLock, async ctx => {
     if (!ctx.message || !ctx.message.text) {
       return
     }

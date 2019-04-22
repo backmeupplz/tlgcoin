@@ -7,11 +7,11 @@ import { report } from '../helpers/report'
 import { InstanceType } from 'typegoose'
 import { DuelModel, DuelState, Duel } from '../models/Duel'
 import { getName } from '../helpers/name'
-import { checkIfAdmin } from '../helpers/checkIfAdmin'
 import { ExtraEditMessage } from 'telegraf/typings/telegram-types'
 import { getUTCTime, getUTCDate } from '../helpers/date'
 import { MessageUpdateRequestStatus } from './mine'
 import { delay } from '../helpers/delay'
+import { checkLock, checkIfAdminCB } from '../middlewares/checkLock'
 
 enum DuelSide {
   attacker = 0,
@@ -21,7 +21,7 @@ enum DuelSide {
 const duelLock = new Semaphore(1)
 
 export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
-  bot.command('duel', async ctx => {
+  bot.command('duel', checkLock, async ctx => {
     await duelLock.wait()
     try {
       const components = ctx.message.text.split(' ')
@@ -31,10 +31,6 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
       const defenderHandleOrID = components[1]
       // Get attacker
       const attacker = ctx.dbuser
-      // Check if admin in nonprivate
-      if (attacker.type !== 'private' && !(await checkIfAdmin(ctx))) {
-        return ctx.replyWithHTML(ctx.i18n.t('only_admins_error'))
-      }
       // Get defender
       let defender: InstanceType<User>
       if (defenderHandleOrID.indexOf('@') > -1) {
@@ -168,11 +164,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
     }
   })
 
-  bot.action(/attack.+/g, async ctx => {
-    // Check if admin in nonprivate
-    if (ctx.chat.type !== 'private' && !(await checkIfAdmin(ctx))) {
-      return ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
-    }
+  bot.action(/attack.+/g, checkIfAdminCB, async ctx => {
     // Get duel
     const duelId = ctx.callbackQuery.data.split('~')[1]
     const duel = await DuelModel.findOne({ _id: duelId }).populate(
@@ -216,11 +208,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
     ctx.answerCbQuery()
   })
 
-  bot.action(/cancel.+/g, async ctx => {
-    // Check if admin in nonprivate
-    if (ctx.chat.type !== 'private' && !(await checkIfAdmin(ctx))) {
-      return ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
-    }
+  bot.action(/cancel.+/g, checkIfAdminCB, async ctx => {
     // Get duel
     const duelId = ctx.callbackQuery.data.split('~')[1]
     const duel = await DuelModel.findOne({ _id: duelId })
@@ -235,11 +223,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
     await ctx.answerCbQuery(ctx.i18n.t('duel_cancelled'))
   })
 
-  bot.action(/flee.+/g, async ctx => {
-    // Check if admin in nonprivate
-    if (ctx.chat.type !== 'private' && !(await checkIfAdmin(ctx))) {
-      return ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
-    }
+  bot.action(/flee.+/g, checkIfAdminCB, async ctx => {
     // Get duel
     const duelId = ctx.callbackQuery.data.split('~')[1]
     const duel = await DuelModel.findOne({ _id: duelId }).populate('defender')
@@ -269,11 +253,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
     await ctx.answerCbQuery(ctx.i18n.t('flee_success'))
   })
 
-  bot.action(/fight.+/g, async ctx => {
-    // Check if admin in nonprivate
-    if (ctx.chat.type !== 'private' && !(await checkIfAdmin(ctx))) {
-      return ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
-    }
+  bot.action(/fight.+/g, checkIfAdminCB, async ctx => {
     // Get duel
     const duelId = ctx.callbackQuery.data.split('~')[1]
     const duel = await DuelModel.findOne({ _id: duelId }).populate(
