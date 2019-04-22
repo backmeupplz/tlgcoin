@@ -367,12 +367,18 @@ function activeDuelText(duel: InstanceType<Duel>, ctx: ContextMessageUpdate) {
         )}</b>\n(${format(duel.attackerBalance)}) <b>${getName(
           duel.attacker.chat
         )}</b>`
-  return `${ctx.i18n.t('active_duel', {
+  let text = `${ctx.i18n.t('active_duel', {
     attacker: getName(duel.attacker.chat),
     defender: getName(duel.defender.chat),
     duelers,
     duelEndTime: `${getUTCDate(duel.endDate)} ${getUTCTime(duel.endDate)}`,
   })}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
+  if (ctx.chat.type === 'channel') {
+    text = `${text} ${ctx.i18n.t('signature', {
+      username: ctx.options.username,
+    })}`
+  }
+  return text
 }
 
 function activeDuelInlineButton(
