@@ -45,9 +45,10 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     // Try adding coins
     try {
       // Add coins
-      ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
-      ctx.dbuser.balance = ctx.dbuser.balance + mineAmount
-      await ctx.dbuser.save()
+      ctx.dbuser = await UserModel.findOneAndUpdate(
+        { id: ctx.dbuser.id },
+        { $inc: { balance: mineAmount } }
+      )
       // console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
     } catch (err) {
       await report(ctx.telegram, err)

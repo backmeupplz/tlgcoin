@@ -2,18 +2,14 @@
 import { User, UserModel } from '../models/User'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { report } from '../helpers/report'
-import Semaphore from 'semaphore-async-await'
 import { InstanceType } from 'typegoose'
 import { getName } from '../helpers/name'
-
-const transferLock = new Semaphore(1)
 
 export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('transfer', async ctx => {
     if (!ctx.message || !ctx.message.text) {
       return
     }
-    await transferLock.wait()
     try {
       const components = ctx.message.text.split(' ')
       if (components.length < 3) {
@@ -62,10 +58,14 @@ export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
         )
       }
       // Transfer
-      sender.balance -= amount
-      await sender.save()
-      recipient.balance += amount
-      await recipient.save()
+      await UserModel.findOneAndUpdate(
+        { id: sender.id },
+        { $inc: { balance: amount * -1 } }
+      )
+      await UserModel.findOneAndUpdate(
+        { id: recipient.id },
+        { $inc: { balance: amount } }
+      )
       // Reply with success
       await ctx.replyWithHTML(
         ctx.i18n.t('transfer_success', {
@@ -75,9 +75,8 @@ export function setupTransfer(bot: Telegraf<ContextMessageUpdate>) {
         })
       )
     } catch (err) {
+      console.log(err)
       await report(bot.telegram, err)
-    } finally {
-      transferLock.signal()
     }
   })
 }
