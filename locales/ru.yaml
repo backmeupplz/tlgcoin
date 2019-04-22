@@ -64,7 +64,7 @@ duel_off_error: У чата <b>${defender}</b> отключены дуэли.
 duel_cancelled: Дуэль отменена.
 duel_requested: Дуэль между <b>${attacker}</b> и <b>${defender}</b> запрошена. Ждем ответа от <b>${defender}</b>.
 duel_request: |
-  <b>${attacker}</b> (${attackerBalance} ТЛГКоинов) запросили дуэль с <b>${defender}</b> (${defenderBalance} ТЛГКоинов)! Ответите на вызов и попробуете выиграть их ненаглядные ТЛГКоины?
+  <b>Анонимные бойцы</b> (${attackerBalance} ТЛГКоинов) запросили дуэль с <b>${defender}</b> (${defenderBalance} ТЛГКоинов)! Ответите на вызов и попробуете выиграть их ненаглядные ТЛГКоины?
 
   Правила просты: кто накликает больше за 10 минут, получит 20% ТЛГКоинов проигравшего.
 fight: Сразиться!
@@ -82,3 +82,16 @@ active_duel: |
 duel_action: Сделать клик!
 duel_not_found: Дуэль не найдена.
 fight_message: Да начнется дуэль!
+duel_finished: Дуэль закончилась.
+duel_finished_message: |
+  Дуэль <b>${attacker}</b> против <b>${defender}</b> завершена.
+
+  ${duelers}
+
+  <b>${winner}</b> выиграли <b>${amount}</b> ТЛГКоинов, которые были переведены от <b>${looser}</b>. Спасибо за честную дуэль!
+duel_finished_message_tie: |
+  Дуэль <b>${attacker}</b> против <b>${defender}</b> завершилась ничьей. Никто не победил, никто не проиграл.
+
+  ${duelers}
+
+  Спасибо за честную дуэль!

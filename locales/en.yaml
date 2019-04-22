@@ -64,7 +64,7 @@ duel_off_error: <b>${defender}</b> chat doesn't have duel mode on.
 duel_cancelled: Duel cancelled.
 duel_requested: Duel between <b>${attacker}</b> and <b>${defender}</b> has been requested. Awaiting answer from <b>${defender}</b>.
 duel_request: |
-  <b>${attacker}</b> (${attackerBalance} TLGCoins) has challenged <b>${defender}</b> (${defenderBalance} TLGCoins) to a duel! Would you like to fight back and try winning their precious TLGCoins?
+  <b>Anonymous fighter</b> (${attackerBalance} TLGCoins) has challenged <b>${defender}</b> (${defenderBalance} TLGCoins) to a duel! Would you like to fight back and try winning their precious TLGCoins?
 
   The rules are simple: whoever gets the most clicks in 10 minutes will get 20% of the other's TLGCoins.
 fight: Fight!
@@ -82,3 +82,16 @@ active_duel: |
 duel_action: Do a click!
 duel_not_found: Duel not found.
 fight_message: Let the duel begin!
+duel_finished: Duel finished.
+duel_finished_message: |
+  Duel between <b>${attacker}</b> and <b>${defender}</b> has finished.
+
+  ${duelers}
+
+  <b>${winner}</b> won <b>${amount}</b> TLGCoins and they've been transferred from <b>${looser}</b>. Thank you for the fair duel!
+duel_finished_message_tie: |
+  Duel between <b>${attacker}</b> and <b>${defender}</b> has finished in a tie. Nobody won, nobody lost.
+
+  ${duelers}
+
+  Thank you for the fair duel!

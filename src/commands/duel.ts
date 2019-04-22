@@ -11,6 +11,7 @@ import { checkIfAdmin } from '../helpers/checkIfAdmin'
 import { ExtraEditMessage } from 'telegraf/typings/telegram-types'
 import { getUTCTime, getUTCDate } from '../helpers/date'
 import { MessageUpdateRequestStatus } from './mine'
+import { delay } from '../helpers/delay'
 
 enum DuelSide {
   attacker = 0,
@@ -312,8 +313,6 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
   })
 
   bot.action(/duel.+/, async ctx => {
-    // Answer callback query right away
-    await ctx.answerCbQuery()
     // Get options
     const options = ctx.callbackQuery.data.split('~')
     // Get duel
@@ -322,19 +321,24 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
       'defender attacker'
     )
     if (!duel) {
-      return
+      return ctx.answerCbQuery(ctx.i18n.t('duel_not_found'))
     }
+    if (duel.state !== DuelState.active) {
+      return ctx.answerCbQuery(ctx.i18n.t('duel_finished'))
+    }
+    // Answer callback query right away
+    await ctx.answerCbQuery()
     // Get if attacker or defender
     const side = parseInt(options[2], 10) as DuelSide
     // Increment the right side
     if (side === DuelSide.attacker) {
       await DuelModel.findOneAndUpdate(
-        { _id: duelId },
+        { _id: duelId, state: DuelState.active },
         { $inc: { attackerBalance: 1 } }
       )
     } else {
       await DuelModel.findOneAndUpdate(
-        { _id: duelId },
+        { _id: duelId, state: DuelState.active },
         { $inc: { defenderBalance: 1 } }
       )
     }
@@ -407,6 +411,12 @@ function activeDuelInlineButton(
 
 const updateLocks = {}
 const messageUpdateRequests = {}
+
+export async function waitWhenUpdatesAreOver(duel: InstanceType<Duel>) {
+  while (messageUpdateRequests[duel.id]) {
+    await delay(0.5)
+  }
+}
 
 async function updateMessages(
   ctx: ContextMessageUpdate,

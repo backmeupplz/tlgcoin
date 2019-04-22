@@ -14,6 +14,7 @@ import { updateUser } from './middlewares/updateUser'
 import { setupTransfer } from './commands/transfer'
 import { setupDuel } from './commands/duel'
 import { setupDuelMode } from './commands/duelMode'
+import { startCheckingDuels } from './helpers/duelChecker'
 
 // Check time
 bot.use(checkTime)
@@ -30,6 +31,9 @@ setupLeaderboard(bot)
 setupTransfer(bot)
 setupDuel(bot)
 setupDuelMode(bot)
+
+// Start checking duels
+startCheckingDuels(bot)
 
 // Start bot
 bot.startPolling()
