@@ -27,7 +27,7 @@ export async function startCheckingDuels(
     isChecking = true
     await checkDuels()
     isChecking = false
-  }, 1 * 1000)
+  }, 10 * 1000)
 }
 
 async function checkDuels() {
