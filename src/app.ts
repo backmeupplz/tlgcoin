@@ -15,6 +15,7 @@ import { setupTransfer } from './commands/transfer'
 import { setupDuel } from './commands/duel'
 import { setupDuelMode } from './commands/duelMode'
 import { startCheckingDuels } from './helpers/duelChecker'
+import { setupLock } from './commands/lock'
 
 // Check time
 bot.use(checkTime)
@@ -31,6 +32,7 @@ setupLeaderboard(bot)
 setupTransfer(bot)
 setupDuel(bot)
 setupDuelMode(bot)
+setupLock(bot)
 
 // Start checking duels
 startCheckingDuels(bot)
