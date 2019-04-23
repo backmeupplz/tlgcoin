@@ -49,7 +49,7 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     // Release semaphore
     mineLock.signal()
     // Try updating balance message
-    await messageUpdater.update(
+    messageUpdater.update(
       `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`,
       async () => {
         await updateMessage(ctx)

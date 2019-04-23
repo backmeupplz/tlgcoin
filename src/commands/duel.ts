@@ -187,7 +187,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
         { $inc: { defenderBalance: 1 } }
       )
     }
-    await messageUpdater.update(duel.id, async () => {
+    messageUpdater.update(duel.id, async () => {
       await updateMessages(ctx, duel)
     })
   })
