@@ -35,7 +35,7 @@ async function leaderboardText(ctx: ContextMessageUpdate) {
   })
     .sort({ balance: -1 })
     .limit(10)
-  return `${ctx.i18n.t('leaderboard', {
+  let text = `${ctx.i18n.t('leaderboard', {
     players: topUsers.reduce(
       (prev, cur, i) =>
         `${prev ? `${prev}\n` : prev}${i + 1}. ${
@@ -60,4 +60,10 @@ async function leaderboardText(ctx: ContextMessageUpdate) {
       ''
     ),
   })}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
+  if (ctx.chat.type === 'channel') {
+    text = `${text} ${ctx.i18n.t('signature', {
+      username: ctx.options.username,
+    })}`
+  }
+  return text
 }

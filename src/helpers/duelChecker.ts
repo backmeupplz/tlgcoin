@@ -79,73 +79,97 @@ async function checkDuels() {
       // Update messages
       if (isTie) {
         i18n.locale(duel.attacker.language)
+        let text = `${i18n.t('duel_finished_message_tie', {
+          attacker: getName(duel.attacker.chat),
+          defender: getName(duel.defender.chat),
+          duelers,
+        })}\n${i18n.t('updated', { time: getUTCTime() })}`
+        if (duel.attacker.chat.type === 'channel') {
+          text = `${text} ${i18n.t('signature', {
+            username: bot.options.username,
+          })}`
+        }
         await tryReport(
           bot.telegram.editMessageText(
             duel.attackerMessage.chat.id,
             duel.attackerMessage.message_id,
             undefined,
-            `${i18n.t('duel_finished_message_tie', {
-              attacker: getName(duel.attacker.chat),
-              defender: getName(duel.defender.chat),
-              duelers,
-            })}\n${i18n.t('updated', { time: getUTCTime() })}`,
+            text,
             Extra.HTML() as ExtraEditMessage
           )
         )
         i18n.locale(duel.defender.language)
+        text = `${i18n.t('duel_finished_message', {
+          attacker: getName(duel.attacker.chat),
+          defender: getName(duel.defender.chat),
+          duelers,
+        })}\n${i18n.t('updated', { time: getUTCTime() })}`
+        if (duel.defender.chat.type === 'channel') {
+          text = `${text} ${i18n.t('signature', {
+            username: bot.options.username,
+          })}`
+        }
         await tryReport(
           bot.telegram.editMessageText(
             duel.defenderMessage.chat.id,
             duel.defenderMessage.message_id,
             undefined,
-            `${i18n.t('duel_finished_message', {
-              attacker: getName(duel.attacker.chat),
-              defender: getName(duel.defender.chat),
-              duelers,
-            })}\n${i18n.t('updated', { time: getUTCTime() })}`,
+            text,
             Extra.HTML() as ExtraEditMessage
           )
         )
       } else {
         i18n.locale(duel.attacker.language)
+        let text = `${i18n.t('duel_finished_message', {
+          attacker: getName(duel.attacker.chat),
+          defender: getName(duel.defender.chat),
+          duelers,
+          winner: attackerWon
+            ? getName(duel.attacker.chat)
+            : getName(duel.defender.chat),
+          looser: attackerWon
+            ? getName(duel.defender.chat)
+            : getName(duel.attacker.chat),
+          amount: format(amountWon),
+        })}\n${i18n.t('updated', { time: getUTCTime() })}`
+        if (duel.attacker.chat.type === 'channel') {
+          text = `${text} ${i18n.t('signature', {
+            username: bot.options.username,
+          })}`
+        }
         await tryReport(
           bot.telegram.editMessageText(
             duel.attackerMessage.chat.id,
             duel.attackerMessage.message_id,
             undefined,
-            `${i18n.t('duel_finished_message', {
-              attacker: getName(duel.attacker.chat),
-              defender: getName(duel.defender.chat),
-              duelers,
-              winner: attackerWon
-                ? getName(duel.attacker.chat)
-                : getName(duel.defender.chat),
-              looser: attackerWon
-                ? getName(duel.defender.chat)
-                : getName(duel.attacker.chat),
-              amount: format(amountWon),
-            })}\n${i18n.t('updated', { time: getUTCTime() })}`,
+            text,
             Extra.HTML() as ExtraEditMessage
           )
         )
         i18n.locale(duel.defender.language)
+        text = `${i18n.t('duel_finished_message', {
+          attacker: getName(duel.attacker.chat),
+          defender: getName(duel.defender.chat),
+          duelers,
+          winner: attackerWon
+            ? getName(duel.attacker.chat)
+            : getName(duel.defender.chat),
+          looser: attackerWon
+            ? getName(duel.defender.chat)
+            : getName(duel.attacker.chat),
+          amount: format(amountWon),
+        })}\n${i18n.t('updated', { time: getUTCTime() })}`
+        if (duel.defender.chat.type === 'channel') {
+          text = `${text} ${i18n.t('signature', {
+            username: bot.options.username,
+          })}`
+        }
         await tryReport(
           bot.telegram.editMessageText(
             duel.defenderMessage.chat.id,
             duel.defenderMessage.message_id,
             undefined,
-            `${i18n.t('duel_finished_message', {
-              attacker: getName(duel.attacker.chat),
-              defender: getName(duel.defender.chat),
-              duelers,
-              winner: attackerWon
-                ? getName(duel.attacker.chat)
-                : getName(duel.defender.chat),
-              looser: attackerWon
-                ? getName(duel.defender.chat)
-                : getName(duel.attacker.chat),
-              amount: format(amountWon),
-            })}\n${i18n.t('updated', { time: getUTCTime() })}`,
+            text,
             Extra.HTML() as ExtraEditMessage
           )
         )
