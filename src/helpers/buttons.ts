@@ -56,7 +56,9 @@ export function refreshInlineButton(ctx: ContextMessageUpdate) {
 export function mineButtonExtraInline(ctx, amount) {
   return Extra.HTML().markup(m =>
     m.inlineKeyboard([
-      m.callbackButton(ctx.i18n.t('mine_button', { amount }), 'mine'),
+      [m.callbackButton(ctx.i18n.t('mine_button', { amount }), 'mine')],
+      [m.callbackButton(ctx.i18n.t('mine_button', { amount }), 'mine')],
+      [m.callbackButton(ctx.i18n.t('mine_button', { amount }), 'mine')],
     ])
   )
 }
