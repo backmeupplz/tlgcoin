@@ -71,7 +71,7 @@ export async function checkDuel(
   const activeAttackDuelDefender = await DuelModel.findOne({
     attacker: defender,
     state: DuelState.active,
-  })
+  }).populate('attacker defender')
   if (activeAttackDuelDefender) {
     await tryReport(
       ctx.replyWithHTML(
@@ -87,7 +87,7 @@ export async function checkDuel(
   const activeDefendDuelDefender = await DuelModel.findOne({
     defender,
     state: DuelState.active,
-  })
+  }).populate('attacker defender')
   if (activeDefendDuelDefender) {
     await tryReport(
       ctx.replyWithHTML(
@@ -104,7 +104,9 @@ export async function checkDuel(
     defenderId: defender.id,
     attackerId: attacker.id,
     state: { $in: [DuelState.requested, DuelState.cancelled] },
-  }).sort({ createdAt: -1 })
+  })
+    .sort({ createdAt: -1 })
+    .populate('attacker defender')
   if (
     pastRequest &&
     (pastRequest.createdAt.getTime() - Date.now()) / 1000 < 60 * 60 * 1000
