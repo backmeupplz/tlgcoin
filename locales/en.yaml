@@ -106,3 +106,4 @@ channel: channel
 group: group
 supergroup: supergroup
 private: person
+dud_message: It's a dud! Try the correct button.

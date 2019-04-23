@@ -27,6 +27,7 @@
     "dotenv": "^7.0.0",
     "js-yaml": "^3.13.1",
     "mongoose": "^5.5.2",
+    "random-emoji": "^1.0.2",
     "semaphore-async-await": "^1.5.1",
     "telegraf": "^3.29.0",
     "telegraf-i18n": "^6.5.0",
