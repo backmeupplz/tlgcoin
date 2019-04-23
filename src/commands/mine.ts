@@ -10,15 +10,8 @@ import { getUTCTime } from '../helpers/date'
 import { tryReport } from '../helpers/tryReport'
 import { mineButtonExtraInline } from '../helpers/buttons'
 
-export enum MessageUpdateRequestStatus {
-  Empty = 0,
-  Occupied = 1,
-  Requested = 2,
-}
-
 const mineAmount = 1
 
-const mineLocks = {}
 const messageUpdater = new MessageUpdater()
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
@@ -32,22 +25,11 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
   bot.action('mine', async ctx => {
     // Answer right away
     await tryReport(ctx.answerCbQuery())
-    // Lock semaphore
-    let mineLock = mineLocks[ctx.dbuser.id]
-    if (!mineLock) {
-      mineLock = new Semaphore(1)
-      mineLocks[ctx.dbuser.id] = mineLock
-    }
-    await mineLock.wait()
     // Try adding coins
-    await tryReport(async () => {
-      ctx.dbuser = await UserModel.findOneAndUpdate(
-        { id: ctx.dbuser.id },
-        { $inc: { balance: mineAmount } }
-      )
-    })
-    // Release semaphore
-    mineLock.signal()
+    ctx.dbuser = await UserModel.findOneAndUpdate(
+      { id: ctx.dbuser.id },
+      { $inc: { balance: mineAmount } }
+    )
     // Try updating balance message
     messageUpdater.update(
       `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`,
