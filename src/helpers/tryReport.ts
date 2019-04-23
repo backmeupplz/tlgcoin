@@ -23,7 +23,7 @@ async function report(err: Error) {
       JSON.stringify(err)}</code>\n\n<code>${err.stack
       .replace('<', '{{')
       .replace('>', '}}')}</code>`
-    await bot.telegram.sendMessage(process.env.ADMIN, text, {
+    bot.telegram.sendMessage(process.env.ADMIN, text, {
       parse_mode: 'HTML',
     })
   } catch (err) {
