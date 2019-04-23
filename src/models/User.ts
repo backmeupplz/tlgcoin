@@ -23,6 +23,8 @@ export class User extends Typegoose {
   duelsOn: boolean
   @prop({ required: true, default: false })
   adminLocked: boolean
+  @prop({ required: true, default: true })
+  attackerAnonimity: boolean
 }
 
 // Get User model

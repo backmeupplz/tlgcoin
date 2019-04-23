@@ -16,6 +16,7 @@ import { setupDuel } from './commands/duel'
 import { setupDuelMode } from './commands/duelMode'
 import { startCheckingDuels } from './helpers/duelChecker'
 import { setupLock } from './commands/lock'
+import { setupAttackerAnonimity } from './commands/attackerAnonimity'
 
 // Check time
 bot.use(checkTime)
@@ -33,6 +34,7 @@ setupTransfer(bot)
 setupDuel(bot)
 setupDuelMode(bot)
 setupLock(bot)
+setupAttackerAnonimity(bot)
 
 // Start checking duels
 startCheckingDuels(bot)

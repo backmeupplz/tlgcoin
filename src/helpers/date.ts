@@ -17,3 +17,9 @@ export function getUTCTime(d?: Date) {
 function leadZero(n: number) {
   return n < 10 ? `0${n}` : n
 }
+
+export function dateMinutesAfterNow(minutes: number) {
+  const minutesLater = new Date()
+  minutesLater.setMinutes(minutesLater.getMinutes() + minutes)
+  return minutesLater
+}

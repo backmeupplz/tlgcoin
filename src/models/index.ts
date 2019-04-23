@@ -9,3 +9,4 @@ mongoose.set('useFindAndModify', false)
 
 // Export models
 export * from './User'
+export * from './Duel'

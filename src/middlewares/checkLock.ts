@@ -1,6 +1,6 @@
 // Dependencies
 import { ContextMessageUpdate } from 'telegraf'
-import { report } from '../helpers/report'
+import { tryReport } from '../helpers/tryReport'
 
 export async function checkLock(ctx: ContextMessageUpdate, next: () => any) {
   // Non-group
@@ -21,34 +21,29 @@ export async function checkLock(ctx: ContextMessageUpdate, next: () => any) {
   if (await checkIfAdmin(ctx)) {
     next()
   } else {
-    try {
-      // Delete if needed
-      await ctx.telegram.deleteMessage(
+    // Delete if needed
+    await tryReport(
+      ctx.telegram.deleteMessage(
         ctx.chat.id,
         (ctx.message || ctx.channelPost).message_id
       )
-    } catch (err) {
-      await report(ctx.telegram, err)
-    }
+    )
   }
 }
 
 export async function checkIfAdmin(ctx: ContextMessageUpdate) {
-  try {
-    const admins = await ctx.getChatAdministrators()
-    let isAdmin = false
-    for (const admin of admins) {
-      if (admin.user.id === ctx.from.id) {
-        isAdmin = true
-        break
-      }
-    }
-    return isAdmin
-  } catch (err) {
-    await report(ctx.telegram, err)
-    // In case of issues, assume the user can perform the action
+  const admins = await tryReport(ctx.getChatAdministrators())
+  if (!admins) {
     return true
   }
+  let isAdmin = false
+  for (const admin of admins) {
+    if (admin.user.id === ctx.from.id) {
+      isAdmin = true
+      break
+    }
+  }
+  return isAdmin
 }
 
 export async function checkIfAdminCB(
@@ -57,7 +52,7 @@ export async function checkIfAdminCB(
 ) {
   // Check if admin in nonprivate
   if (ctx.chat.type !== 'private' && !(await checkIfAdmin(ctx))) {
-    return ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
+    await ctx.answerCbQuery(ctx.i18n.t('only_admins_error'))
   } else {
     return next()
   }

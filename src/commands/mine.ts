@@ -1,12 +1,14 @@
 // Dependencies
+import { MessageUpdater } from '../helpers/MessageUpdater'
 import { checkLock } from '../middlewares/checkLock'
-import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
+import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import Semaphore from 'semaphore-async-await'
 import { UserModel } from '../models'
 import { getName } from '../helpers/name'
 import { format } from '../helpers/format'
-import { report } from '../helpers/report'
 import { getUTCTime } from '../helpers/date'
+import { tryReport } from '../helpers/tryReport'
+import { mineButtonExtraInline } from '../helpers/buttons'
 
 export enum MessageUpdateRequestStatus {
   Empty = 0,
@@ -17,8 +19,7 @@ export enum MessageUpdateRequestStatus {
 const mineAmount = 1
 
 const mineLocks = {}
-const updateLocks = {}
-const messageUpdateRequests = {}
+const messageUpdater = new MessageUpdater()
 
 export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('mine', checkLock, async ctx => {
@@ -29,13 +30,8 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     )
   })
   bot.action('mine', async ctx => {
-    // Try answering right away
-    try {
-      // Answer right away
-      await ctx.answerCbQuery()
-    } catch (err) {
-      await report(ctx.telegram, err)
-    }
+    // Answer right away
+    await tryReport(ctx.answerCbQuery())
     // Lock semaphore
     let mineLock = mineLocks[ctx.dbuser.id]
     if (!mineLock) {
@@ -44,77 +40,30 @@ export function setupMine(bot: Telegraf<ContextMessageUpdate>) {
     }
     await mineLock.wait()
     // Try adding coins
-    try {
-      // Add coins
+    await tryReport(async () => {
       ctx.dbuser = await UserModel.findOneAndUpdate(
         { id: ctx.dbuser.id },
         { $inc: { balance: mineAmount } }
       )
-      // console.log(`(${ctx.dbuser.id}) Increased to ${ctx.dbuser.balance}`)
-    } catch (err) {
-      await report(ctx.telegram, err)
-    } finally {
-      // Release semaphore
-      mineLock.signal()
-    }
+    })
+    // Release semaphore
+    mineLock.signal()
     // Try updating balance message
-    await updateMessage(ctx)
+    await messageUpdater.update(
+      `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`,
+      async () => {
+        await updateMessage(ctx)
+      }
+    )
   })
 }
 
 async function updateMessage(ctx: ContextMessageUpdate) {
-  // Get the unique id of the message
-  const msgId = `${ctx.chat.id}-${ctx.callbackQuery.message.message_id}`
-  // Lock semaphore
-  let updateLock = updateLocks[msgId]
-  if (!updateLock) {
-    updateLock = new Semaphore(1)
-    updateLocks[msgId] = updateLock
-  }
-  await updateLock.wait()
-  // Check the update requests
-  if (messageUpdateRequests[msgId]) {
-    messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Requested
-    // Release lock
-    updateLock.signal()
-    return
-  }
-  messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Occupied
-  // Release lock
-  updateLock.signal()
-  do {
-    try {
-      // If requested, change to occupied
-      if (
-        messageUpdateRequests[msgId] === MessageUpdateRequestStatus.Requested
-      ) {
-        messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Occupied
-      }
-      // Update message
-      ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
-      const text = await mineText(ctx)
-      const extra = mineButtonExtraInline(ctx, mineAmount)
-      await ctx.editMessageText(text, extra)
-    } catch (err) {
-      await report(ctx.telegram, err)
-    } finally {
-      if (
-        messageUpdateRequests[msgId] !== MessageUpdateRequestStatus.Requested
-      ) {
-        messageUpdateRequests[msgId] = MessageUpdateRequestStatus.Empty
-      }
-    }
-  } while (
-    messageUpdateRequests[msgId] === MessageUpdateRequestStatus.Requested
-  )
-}
-
-function mineButtonExtraInline(ctx, amount) {
-  return Extra.HTML().markup(m =>
-    m.inlineKeyboard([
-      m.callbackButton(ctx.i18n.t('mine_button', { amount }), 'mine'),
-    ])
-  )
+  // Update message
+  ctx.dbuser = await UserModel.findOne({ id: ctx.dbuser.id })
+  const text = await mineText(ctx)
+  const extra = mineButtonExtraInline(ctx, mineAmount)
+  await ctx.editMessageText(text, extra)
 }
 
 async function mineText(ctx: ContextMessageUpdate) {

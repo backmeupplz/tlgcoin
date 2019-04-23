@@ -1,10 +1,10 @@
 // Dependencies
 import { ContextMessageUpdate } from 'telegraf'
-import { report } from '../helpers/report'
+import { tryReport } from '../helpers/tryReport'
 
 export async function updateUser(ctx: ContextMessageUpdate, next) {
-  const user = ctx.dbuser
-  try {
+  await tryReport(async () => {
+    const user = ctx.dbuser
     user.type = ctx.chat.type
     user.chat = ctx.chat
     user.username = ctx.chat.username
@@ -12,17 +12,11 @@ export async function updateUser(ctx: ContextMessageUpdate, next) {
       : undefined
     if (user.type !== 'private') {
       if (!user.chat.username && !user.chat.invite_link) {
-        try {
-          const link = await ctx.telegram.exportChatInviteLink(user.id)
-          user.chat.invite_link = link
-        } catch (err) {
-          await report(ctx.telegram, err)
-        }
+        const link = await tryReport(ctx.telegram.exportChatInviteLink(user.id))
+        user.chat.invite_link = link
       }
     }
     await user.save()
-  } catch (err) {
-    await report(ctx.telegram, err)
-  }
+  })
   next()
 }

@@ -21,6 +21,11 @@ enum StakeType {
   fixed,
 }
 
+export enum DuelSide {
+  attacker = 0,
+  defender = 1,
+}
+
 export class Duel extends Typegoose {
   @prop({
     enum: DuelType,

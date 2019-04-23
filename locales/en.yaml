@@ -9,6 +9,7 @@ help: |
   /duel — duel for TLGCoins
   /duelMode — toggle duel mode on and off
   /lock — answer only to admins or to anyone
+  /attackerAnonimity — hide or show duel attacker's link (useful to avoid spam)
   /mine — start mining TLGCoins!
 
   Address all questions to @borodutch_support. Telegram ID for this chat is <b>${id}</b>.
@@ -65,7 +66,7 @@ duel_off_error: <b>${defender}</b> chat doesn't have duel mode on.
 duel_cancelled: Duel cancelled.
 duel_requested: Duel between <b>${attacker}</b> and <b>${defender}</b> has been requested. Awaiting answer from <b>${defender}</b>.
 duel_request: |
-  <b>Anonymous fighter</b> (${attackerBalance} TLGCoins) has challenged <b>${defender}</b> (${defenderBalance} TLGCoins) to a duel! Would you like to fight back and try winning their precious TLGCoins?
+  ${attacker} (${type} — ${attackerBalance} TLGCoins) has challenged <b>${defender}</b> (${defenderBalance} TLGCoins) to a duel! Would you like to fight back and try winning their precious TLGCoins?
 
   The rules are simple: whoever gets the most clicks in 10 minutes will get 20% of the other's TLGCoins.
 fight: Fight!
@@ -77,7 +78,7 @@ active_duel: |
 
   ${duelers}
 
-  Press the button below — who will have the most clicks by the end of the duel will take 20% of the looser's TLGCoins!
+  Press the button below — who will have the most clicks by the end of the duel will take 20% of the loser's TLGCoins!
 
   Duel will end: ${duelEndTime}
 duel_action: Do a click!
@@ -98,3 +99,10 @@ duel_finished_message_tie: |
   Thank you for the fair duel!
 lock_on: Bot will only respond to admin commands.
 lock_off: Bot will respond commands sent by anyone.
+attacker_anonimity_on: Bot will anonimize who attacks you.
+attacker_anonimity_off: Bot will tell you who attacks you.
+anonymous_fighters: Anonymous fighters
+channel: channel
+group: group
+supergroup: supergroup
+private: person

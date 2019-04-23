@@ -1,11 +1,11 @@
 // Dependencies
 import { checkLock } from '../middlewares/checkLock'
-import { Telegraf, ContextMessageUpdate, Extra } from 'telegraf'
+import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { UserModel } from '../models'
 import { getName, getNameWithLink } from '../helpers/name'
 import { format } from '../helpers/format'
-import { report } from '../helpers/report'
 import { getUTCTime } from '../helpers/date'
+import { refreshInlineButton } from '../helpers/buttons'
 
 export function setupLeaderboard(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('leaderboard', checkLock, async ctx => {
@@ -15,14 +15,10 @@ export function setupLeaderboard(bot: Telegraf<ContextMessageUpdate>) {
     )
   })
   bot.action('refresh', async ctx => {
-    try {
-      await ctx.editMessageText(
-        await leaderboardText(ctx),
-        refreshInlineButton(ctx)
-      )
-    } catch (err) {
-      await report(bot.telegram, err)
-    }
+    await ctx.editMessageText(
+      await leaderboardText(ctx),
+      refreshInlineButton(ctx)
+    )
   })
 }
 
@@ -64,12 +60,4 @@ async function leaderboardText(ctx: ContextMessageUpdate) {
       ''
     ),
   })}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
-}
-
-function refreshInlineButton(ctx: ContextMessageUpdate) {
-  return Extra.HTML()
-    .webPreview(false)
-    .markup(m =>
-      m.inlineKeyboard([m.callbackButton(ctx.i18n.t('refresh'), 'refresh')])
-    )
 }
