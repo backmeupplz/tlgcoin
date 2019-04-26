@@ -14,8 +14,7 @@ export function setupStats(bot: Telegraf<ContextMessageUpdate>) {
           count: { $sum: 1 },
         },
       },
-    ])) as any
-    console.log(stats)
+    ]))[0]
     await ctx.replyWithHTML(
       ctx.i18n.t('stats', {
         count: format(stats.count),

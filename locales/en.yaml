@@ -109,4 +109,4 @@ supergroup: supergroup
 private: person
 dud_message: It's a dud! Try the correct button.
 stats: |
-  🔥 Users number: ${count}, total TLGCoins mined: ${total}
+  🔥 Users number: <b>${count}</b>, total TLGCoins mined: <b>${total}</b>
