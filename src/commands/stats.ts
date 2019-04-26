@@ -6,7 +6,7 @@ import { format } from '../helpers/format'
 
 export function setupStats(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('stats', checkLock, async ctx => {
-    const stats = await UserModel.aggregate([
+    const stats = (await UserModel.aggregate([
       {
         $group: {
           _id: 'Stats',
@@ -14,7 +14,8 @@ export function setupStats(bot: Telegraf<ContextMessageUpdate>) {
           count: { $sum: 1 },
         },
       },
-    ])[0]
+    ])) as any
+    console.log(stats)
     await ctx.replyWithHTML(
       ctx.i18n.t('stats', {
         count: format(stats.count),
