@@ -56,6 +56,12 @@ async function mineText(ctx: ContextMessageUpdate) {
       balance: { $gt: ctx.dbuser.balance },
     }).countDocuments()) + 1
   )
+  const overallCount = format(
+    await UserModel.find({
+      id: { $ne: ctx.chat.id },
+      type: ctx.dbuser.type,
+    }).countDocuments()
+  )
   const isPrivate = ctx.chat.type === 'private'
   const name = getName(ctx.dbuser.chat)
 
@@ -63,7 +69,7 @@ async function mineText(ctx: ContextMessageUpdate) {
     name,
     balance: format(ctx.dbuser.balance),
     cps: 0,
-    position,
+    position: `${position}/${overallCount}`,
   })}`
   text = `${text}\n${ctx.i18n.t('updated', { time: getUTCTime() })}`
   if (ctx.chat.type === 'channel') {
