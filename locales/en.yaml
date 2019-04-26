@@ -10,6 +10,7 @@ help: |
   /duelMode — toggle duel mode on and off
   /lock — answer only to admins or to anyone
   /attackerAnonimity — hide or show duel attacker's link (useful to avoid spam)
+  /stats — overall users stats
   /mine — start mining TLGCoins!
 
   Address all questions to @borodutch_support. Telegram ID for this chat is <b>${id}</b>.
@@ -107,3 +108,4 @@ group: group
 supergroup: supergroup
 private: person
 dud_message: It's a dud! Try the correct button.
+stats: 🔥 Users number: ${count}, total TLGCoins mined: ${total}
