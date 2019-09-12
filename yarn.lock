@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@hasezoey/typegoose@^5.9.2":
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@hasezoey/typegoose/-/typegoose-5.9.2.tgz#10e949ba04da61156416448f9d5990794dd15fd3"
+  integrity sha512-PwbOGJi9IggUF8E2K3fEHSEoBgXV3nlDd1H6m/rjC9iWG1GeKHAp9gp0SPZh3e/5rJ3vWbfWbyukD/pMT3tbxA==
+  dependencies:
+    reflect-metadata "^0.1.13"
+
 "@types/bson@*":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/bson/-/bson-4.0.0.tgz#9073772679d749116eb1dfca56f8eaac6d59cc7a"
@@ -1254,7 +1261,7 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.7.0:
+mongoose@^5.5.2:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.7.0.tgz#5a686d7a85342784a26d1afb875a2a8170a7a32f"
   integrity sha512-nE43r4kEUpUBfr32rf+zJKEtzd6I3F5YdbrSHp/DDdVQyej34Cv7gfBdcoRNehrPQDV3khOh0JpiS1aLN9/OCw==
@@ -2127,13 +2134,6 @@ tslib@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
-
-typegoose@^5.9.1:
-  version "5.9.1"
-  resolved "https://registry.yarnpkg.com/typegoose/-/typegoose-5.9.1.tgz#58dbb14f35ecf96b22e7c744fa7a0f9731260f29"
-  integrity sha512-D+vMhNyZeKBZHrmJFZwOodl3T9W2NOXY+hbnW/f1n60oEL8+L15eryFc9C6fAKrlnkgpui+kdQnNXsLwx2MgCw==
-  dependencies:
-    reflect-metadata "^0.1.13"
 
 typescript@^3.6.3:
   version "3.6.3"

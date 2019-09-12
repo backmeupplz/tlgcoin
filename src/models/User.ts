@@ -1,6 +1,6 @@
 // Dependencies
 import { ContextMessageUpdate } from 'telegraf'
-import { prop, Typegoose } from 'typegoose'
+import { prop, Typegoose } from '@hasezoey/typegoose'
 import * as Telegram from 'telegram-typings'
 
 export class User extends Typegoose {

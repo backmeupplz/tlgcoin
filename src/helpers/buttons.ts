@@ -1,6 +1,6 @@
 // Dependencies
 import { ContextMessageUpdate, Extra } from 'telegraf'
-import { InstanceType } from 'typegoose'
+import { InstanceType } from '@hasezoey/typegoose'
 import { Duel, DuelSide } from '../models'
 import randomEmoji = require('random-emoji')
 

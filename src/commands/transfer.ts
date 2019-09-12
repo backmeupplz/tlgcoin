@@ -1,7 +1,7 @@
 // Dependencies
 import { User, UserModel } from '../models/User'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { InstanceType } from 'typegoose'
+import { InstanceType } from '@hasezoey/typegoose'
 import { getName } from '../helpers/name'
 import { checkLock } from '../middlewares/checkLock'
 

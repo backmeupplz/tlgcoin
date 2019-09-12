@@ -1,29 +1,29 @@
 // Dependencies
-import { prop, Typegoose } from 'typegoose'
+import { prop, Typegoose } from '@hasezoey/typegoose'
 import { User } from './'
 import { Message } from 'telegram-typings'
 
 export enum DuelState {
-  setup,
-  requested,
-  active,
-  finished,
-  cancelled,
+  setup = 'setup',
+  requested = 'requested',
+  active = 'active',
+  finished = 'finished',
+  cancelled = 'cancelled',
 }
 
 enum DuelType {
-  clicks,
-  patience,
+  clicks = '0',
+  patience = '1',
 }
 
 enum StakeType {
-  percent,
-  fixed,
+  percent = 'percent',
+  fixed = 'fixed',
 }
 
 export enum DuelSide {
-  attacker = 0,
-  defender = 1,
+  attacker = '0',
+  defender = '1',
 }
 
 export class Duel extends Typegoose {

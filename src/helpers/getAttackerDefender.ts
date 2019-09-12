@@ -1,7 +1,7 @@
 // Dependencies
 import { User, UserModel } from '../models/'
 import { ContextMessageUpdate } from 'telegraf'
-import { InstanceType } from 'typegoose'
+import { InstanceType } from '@hasezoey/typegoose'
 import { tryReport } from './tryReport'
 
 export async function getAttackerDefender(ctx: ContextMessageUpdate) {
