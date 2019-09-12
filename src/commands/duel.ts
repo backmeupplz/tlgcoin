@@ -174,7 +174,7 @@ export function setupDuel(bot: Telegraf<ContextMessageUpdate>) {
     // Answer callback query right away
     await tryReport(ctx.answerCbQuery())
     // Get if attacker or defender
-    const side = parseInt(options[2], 10) as DuelSide
+    const side = `${parseInt(options[2], 10)}` as DuelSide
     // Increment the right side
     if (side === DuelSide.attacker) {
       await DuelModel.findOneAndUpdate(
