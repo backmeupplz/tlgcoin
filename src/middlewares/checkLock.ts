@@ -17,6 +17,15 @@ export async function checkLock(ctx: ContextMessageUpdate, next: () => any) {
     next()
     return
   }
+  // Anonymous admins
+  if (
+    ctx.from &&
+    ctx.from.username &&
+    ctx.from.username === 'GroupAnonymousBot'
+  ) {
+    next()
+    return
+  }
   // Chat admins
   if (await checkIfAdmin(ctx)) {
     next()
