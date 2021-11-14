@@ -14,7 +14,7 @@ export async function tryReport<T>(fun: (() => T) | Promise<T>) {
 async function report(err: Error) {
   const dismissableErrors = ['message is not modified', 'Too Many Requests']
   try {
-    for (const errorText in dismissableErrors) {
+    for (const errorText of dismissableErrors) {
       if (err.message.indexOf(errorText) > -1) {
         return
       }
