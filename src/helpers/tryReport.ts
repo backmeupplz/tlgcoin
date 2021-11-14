@@ -12,7 +12,7 @@ export async function tryReport<T>(fun: (() => T) | Promise<T>) {
 }
 
 async function report(err: Error) {
-  const dismissableErrors = ['message is not modified', 'Too Many Requests']
+  const dismissableErrors = ['message is not modified', 'Too Many Requests', 'not enough rights to manage chat invite link']
   try {
     for (const errorText of dismissableErrors) {
       if (err.message.indexOf(errorText) > -1) {
