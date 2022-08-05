@@ -27,7 +27,7 @@
     "comma-number": "^2.0.1",
     "dotenv": "^8.1.0",
     "js-yaml": "^3.13.1",
-    "mongoose": "^5.5.2",
+    "mongoose": "^5.7.5",
     "random-emoji": "^1.0.2",
     "semaphore-async-await": "^1.5.1",
     "telegraf": "^3.32.0",
